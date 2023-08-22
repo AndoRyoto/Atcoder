@@ -1,0 +1,33 @@
+N = int(input())
+fs = []
+for _ in range(N):
+  fs.append(list(map(int,input().split())))
+L = sorted(fs, key=lambda x: x[1], reverse=True)
+#print(L)
+
+fs, s = L[0]
+ft, t = L[1]
+
+if fs==ft:
+  t //=2
+else:
+  ans = s + t
+  print(ans)
+  exit()
+  
+i = 0
+while(1):
+  if i<N:
+    if fs==L[i][0]:
+      i+=1
+    else:
+      break
+  else:
+    ans = s + t
+    print(ans)
+    exit()
+    
+new_t = L[i][1]
+#print(t, new_t)
+ans = s + max(t, new_t)
+print(ans)
