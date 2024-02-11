@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>python library</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .function-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer; /* カーソルをポインタに変更 */
+  }
+  .accordion-toggle {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    position: relative;
+    top: -5px; /* トグルボタンを上に少し移動 */
+    font-size: 16px; /* 必要に応じて調整 */
+    margin-right: 10px; /* ボタンとタイトルの間隔 */
+  }
+  .function-container {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    max-height: 100px; /* 初期状態では折りたたまれる */
+  }
+  .expanded {
+    max-height: none; /* 適宜調整してください */
+  }
+
+  .function-name {
+    margin: 0; /* 余分なマージンを削除 */
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .function-description {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .code-container {
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+    margin-top: 20px;
+    font-family: "Courier New", Courier, monospace;
+    white-space: pre;
+  }
+  .copy-btn {
+    float: right;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: -20px;
+  }
+  .code-contents {
+    padding: 20px; /* 必要に応じて調整 */
+    /* `code-contents`に追加したいスタイル */
+  position: relative; /* または absolute, が適用されている場合 */
+  top: -40px; /* 上に40ピクセルずらす */
+  }
+  
+</style>
+<script>
+  function copyCode(elementId) {
+    const textToCopy = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const button = document.querySelector(`button[onclick="copyCode('${elementId}')"]`);
+        const originalText = button.innerText;
+        button.innerText = 'Copied';
+        button.style.backgroundColor = 'grey';
+        
+        setTimeout(() => {
+            button.innerText = originalText;
+            button.style.backgroundColor = ''; // 独自のスタイルを持っていない場合は空文字列に戻す
+        }, 500); // 0.5秒後に元に戻す
+    }).catch(err => {
+        console.error('Error copying text: ', err);
+    });
+  }
+
+  function expand(containerId) {
+    var container = document.getElementById(containerId);
+    var button = container.querySelector('.accordion-toggle');
+    if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        button.innerHTML = '&#x25BC;'; // 下向き矢印に変更
+    } else {
+        container.classList.add('expanded');
+        button.innerHTML = '&#x25B2;'; // 上向き矢印に変更
+    }
+}
+
+  
+
+  </script>
+  
+</head>
+<body>
+
+<p>エスケープ処理 : https://saruwakakun.com/tools/html-escape</p> 
+メモ：SCC,UnionFind,dfs,bfs,トポロジカルソート,最大フロー,素因数分解,素数判定,拡張ユークリッド,辞書(get),
+mex,平方分割，重み付きUF,dp色々,ナップザック,bitdp,確率dp,rotate(ABC336F)一般化,zip,逆元,
+累積和,転倒数,()deque,半分全列挙,
+ABC327F-Apple関数化できそう,いもす法,典型90何問か,最長共通部分列,区間dp,pow,部分和問題,Nim一般化,グラフ色々,
+
+
+<div id='1' class="function-container">
+<div class="function-header" onclick="expand('1')">
+  <button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+Fibonacci Sequence
+</div></div>
+  <div class="function-description">
+    This function generates a Fibonacci sequence up to a specified number of terms. The Fibonacci sequence is a series of numbers where each number is the sum of the two preceding ones, starting from 0 and 1.
+  </div>
+  <div class="code-container">
+    <button class="copy-btn" onclick="copyCode('code1')">Copy</button>
+    <div id = 'code1' class="code-contents">
+def fibonacci(n):
+    a, b = 0, 1
+    sequence = []
+    while len(sequence) < n:
+        sequence.append(a)
+        a, b = b, a + b
+    return sequence
+  </div>
+  </div>
+</div>
+
+
+
+<div id='2' class="function-container">
+  <div class="function-header" onclick="expand('2')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+    <div class="function-name">
+Integer_log
+</div></div>
+  <div class="function-description">
+ABC340C
+  </div>
+  <div class="code-container">
+    <button class="copy-btn" onclick="copyCode('code2')">Copy</button>
+    <div id = 'code2' class="code-contents">
+def integer_log(n,x):
+    # nをxで何回割れるか
+    cnt = 0
+    while n!=1:
+        n//=x
+        cnt+=1
+    return cnt
+  </div>
+  </div>
+</div>
+
+<div id='3' class="function-container">
+  <div class="function-header" onclick="expand('3')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+    <div class="function-name">
+ダイクストラ
+</div></div>
+  <div class="function-description">
+ABC340D,
+  </div>
+  <div class="code-container">
+    <button class="copy-btn" onclick="copyCode('code3')">Copy</button>
+    <div id = 'code3' class="code-contents">
+#ダイクストラ、dijkstra
+import heapq
+def dijkstra(S,N,edge):
+    # 始点，頂点数，辺集合(edge[u] = [v,w])を入力として
+    # 各頂点の最小コストのリストを返す
+    hq = [(0, S)]
+    heapq.heapify(hq)
+    cost = [float('inf')] * N
+    cost[S] = 0
+    while hq:
+        c, v = heapq.heappop(hq)
+        if c > cost[v]:continue
+        for u, w in edge[v]:
+            tmp = w + cost[v]
+            if tmp < cost[u]:
+                cost[u] = tmp
+                heapq.heappush(hq, (tmp, u))
+    return cost
+  </div>
+  </div>
+</div>
+
+<div id='4' class="function-container">
+  <div class="function-header" onclick="expand('4')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+遅延セグ木（区間加算，区間和）
+</div></div>
+  <div class="function-description">
+ABC340E,ABC339E
+  </div>
+  <div class="code-container">
+    <button class="copy-btn" onclick="copyCode('code4')">Copy</button>
+    <div id = 'code4' class="code-contents">
+# 遅延セグ木，Lazy，segtree
+def segfunc(x,y):
+    return x+y
+class LazySegTree_RAQ:
+    def __init__(self,init_val,segfunc,ide_ele):
+        n = len(init_val)
+        self.segfunc = segfunc
+        self.ide_ele = ide_ele
+        self.num = 1&lt;&lt;(n-1).bit_length()
+        self.tree = [ide_ele]*2*self.num
+        self.lazy = [0]*2*self.num
+        for i in range(n):
+            self.tree[self.num+i] = init_val[i]
+        for i in range(self.num-1,0,-1):
+            self.tree[i] = self.segfunc(self.tree[2*i], self.tree[2*i+1])
+    def gindex(self,l,r):
+        l += self.num
+        r += self.num
+        lm = l&gt;&gt;(l&amp;-l).bit_length()
+        rm = r&gt;&gt;(r&amp;-r).bit_length()
+        while r&gt;l:
+            if l&lt;=lm:
+                yield l
+            if r&lt;=rm:
+                yield r
+            r &gt;&gt;= 1
+            l &gt;&gt;= 1
+        while l:
+            yield l
+            l &gt;&gt;= 1
+    def propagates(self,*ids):
+        for i in reversed(ids):
+            v = self.lazy[i]
+            if v==0:
+                continue
+            self.lazy[i] = 0
+            self.lazy[2*i] += v
+            self.lazy[2*i+1] += v
+            self.tree[2*i] += v
+            self.tree[2*i+1] += v
+    def add(self,l,r,x):
+        ids = self.gindex(l,r)
+        l += self.num
+        r += self.num
+        while l&amp;lt;r:
+            if l&amp;amp;1:
+                self.lazy[l] += x
+                self.tree[l] += x
+                l += 1
+            if r&amp;amp;1:
+                self.lazy[r-1] += x
+                self.tree[r-1] += x
+            r &amp;gt;&amp;gt;= 1
+            l &gt;&gt;= 1
+        for i in ids:
+            self.tree[i] = self.segfunc(self.tree[2*i], self.tree[2*i+1]) + self.lazy[i]
+    def query(self,l,r):
+        self.propagates(*self.gindex(l,r))
+        res = self.ide_ele
+        l += self.num
+        r += self.num
+        while l&lt;r:
+            if l&amp;1:
+                res = self.segfunc(res,self.tree[l])
+                l += 1
+            if r&amp;1:
+                res = self.segfunc(res,self.tree[r-1])
+            l &gt;&gt;= 1
+            r &gt;&gt;= 1
+        return res
+
+def showSegTree():
+      return [seg.query(i,i+1) for i in range(N)]
+
+A = list(map(int,input().split()))
+seg = LazySegTree_RAQ(A, segfunc, 0)
+seg.query(0,N) #[0,N)の和
+seg.add(0,N,k) #[0,N)にkを加算
+print(*showSegTree())
+  
+  </div></div></div>
+
+  <div id='5' class="function-container">
+    <div class="function-header" onclick="expand('5')">
+      <button class="accordion-toggle">&#x25BC;</button> 
+    <div class="function-name">
+遅延セグ木（区間更新，区間和）
+  </div></div>
+    <div class="function-description">
+  #description
+    </div>
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode('code#')">Copy</button>
+      <div id = 'code#' class="code-contents">
+  #code
+    </div></div></div>
+
+    <div id='6' class="function-container">
+      <div class="function-header" onclick="expand('6')">
+        <button class="accordion-toggle">&#x25BC;</button> 
+        <div class="function-name">
+セグ木（一点更新，区間最大）
+    </div></div>
+      <div class="function-description">
+        log(N)で一点更新と区間最大，区間最小，区間和，区間積，最大公約数などを求める．
+<a href='https://qiita.com/takayg1/items/c811bd07c21923d7ec69' target="_blank">参考</a>        排他的論理和もいける？<br>
+ABC339E
+
+      </div>
+      <div class="code-container">
+        <button class="copy-btn" onclick="copyCode('#')">Copy</button>
+        <div id = '#' class="code-contents">
+def segfunc(x, y):
+    return max(x, y)
+
+INF=float(&#039;inf&#039;)
+ide_ele =-INF
+
+class SegTree:
+    &quot;&quot;&quot;
+    init(init_val, ide_ele): 配列init_valで初期化 O(N)
+    update(k, x): k番目の値をxに更新 O(logN)
+    query(l, r): 区間[l, r)をsegfuncしたものを返す O(logN)
+    &quot;&quot;&quot;
+    def __init__(self, init_val, segfunc, ide_ele):
+        &quot;&quot;&quot;
+        init_val: 配列の初期値
+        segfunc: 区間にしたい操作
+        ide_ele: 単位元
+        n: 要素数
+        num: n以上の最小の2のべき乗
+        tree: セグメント木(1-index)
+        &quot;&quot;&quot;
+        n = len(init_val)
+        self.segfunc = segfunc
+        self.ide_ele = ide_ele
+        self.num = 1 &lt;&lt; (n - 1).bit_length()
+        self.tree = [ide_ele] * 2 * self.num
+        for i in range(n):
+            self.tree[self.num + i] = init_val[i]
+        for i in range(self.num - 1, 0, -1):
+            self.tree[i] = self.segfunc(self.tree[2 * i], self.tree[2 * i + 1])
+
+    def update(self, k, x):
+        &quot;&quot;&quot;
+        k番目の値をxに更新
+        k: index(0-index)
+        x: update value
+        &quot;&quot;&quot;
+        k += self.num
+        self.tree[k] = x
+        while k &gt; 1:
+            self.tree[k &gt;&gt; 1] = self.segfunc(self.tree[k], self.tree[k ^ 1])
+            k &gt;&gt;= 1
+
+    def query(self, l, r):
+        &quot;&quot;&quot;
+        [l, r)のsegfuncしたものを得る
+        l: index(0-index)
+        r: index(0-index)
+        &quot;&quot;&quot;
+        res = self.ide_ele
+
+        l += self.num
+        r += self.num
+        while l &lt; r:
+            if l &amp; 1:
+                res = self.segfunc(res, self.tree[l])
+                l += 1
+            if r &amp; 1:
+                res = self.segfunc(res, self.tree[r - 1])
+            l &gt;&gt;= 1
+            r &gt;&gt;= 1
+        return res
+
+# seg = SegTree(N, segfunc, ide_ele)
+# seg.query(0,N)
+# seg.update(1,10)
+      </div></div></div>
+  
+<div id='bisect' class="function-container">
+  <div class="function-header" onclick="expand('bisect')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+        <div class="function-name">
+bisect
+    </div></div><div class="function-description">
+基本valueを挿入できる場所を返す
+      </div><div class="code-container">
+        <button class="copy-btn" onclick="copyCode('codebisect')">Copy</button>
+        <div id = 'codebisect' class="code-contents">
+import bisect
+def index(a, x):   # 探索したい数値のindexを探索
+    &#039;Locate the leftmost value exactly equal to x&#039;
+    i = bisect.bisect_left(a, x)
+    if i != len(a) and a[i] == x:
+        return i
+    else:return -1
+    
+def find_lt(a, x):   # 探索したい数値未満のうち最大の数値を探索
+    &#039;Find rightmost value less than x&#039;
+    i = bisect.bisect_left(a, x)
+    if i:
+        return a[i-1]
+    else:return -1
+
+def find_le(a, x):   # 探索したい数値以下のうち最大の数値を探索
+    &#039;Find rightmost value less than or equal to x&#039;
+    i = bisect.bisect_right(a, x)
+    if i:
+        return a[i-1]
+    else:return -1
+
+def find_gt(a, x):   # 探索したい数値を超えるもののうち最小の数値を探索
+    &#039;Find leftmost value greater than x&#039;
+    i = bisect.bisect_right(a, x)
+    if i != len(a):
+        return a[i]
+    else:return -1
+
+def find_ge(a, x):   # 探索したい数値以上のうち最小の数値を探索
+    &#039;Find leftmost item greater than or equal to x&#039;
+    i = bisect.bisect_left(a, x)
+    if i != len(a):
+        return a[i]
+    else:return -1
+
+#bisect example
+a = [2, 3, 5, 7, 11, 13, 17, 19]
+
+print(bisect.bisect_left(a, 11)) # 4
+print(bisect.bisect_right(a, 11)) # 5
+print(bisect.bisect(a, 11)) # 5
+print(index(a, 11)) # 4
+print(find_lt(a, 11)) # 7
+print(find_le(a, 11)) # 11
+print(find_gt(a, 11)) # 13
+print(find_ge(a, 11)) # 11
+
+print(bisect.bisect_left(a, 10)) # 4
+print(bisect.bisect_right(a, 10)) # 4
+print(bisect.bisect(a, 10)) # 4
+print(index(a, 10)) # -1
+print(find_lt(a, 10)) # 7
+print(find_le(a, 10)) # 7
+print(find_gt(a, 10)) # 11
+print(find_ge(a, 10)) # 11
+      </div></div></div>
+
+<div id='bns' class="function-container">
+  <div class="function-header" onclick="expand('bns')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+        <div class="function-name">
+二分探索，binary search
+    </div></div><div class="function-description">
+くそ雑二分探索
+      </div><div class="code-container">
+        <button class="copy-btn" onclick="copyCode('codebns')">Copy</button>
+        <div id = 'codebns' class="code-contents">
+def binary(A,x):
+    l = 0
+    r = len(A)
+
+    while(r!=l):
+        m = (r+l)//2
+        if A[m] >= x:
+            r = m
+        else:
+            l = m+1    
+    return r 
+      </div></div></div>
+
+<div id='mgr' class="function-container">
+  <div class="function-header" onclick="expand('mgr')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+        <div class="function-name">
+めぐる式二分探索
+    </div></div><div class="function-description">
+ABC146C,
+左閉区間，右開区間が便利らしい
+<br><a href='https://aotamasaki.hatenablog.com/entry/meguru_bisect'>参考</a>
+      </div><div class="code-container">
+        <button class="copy-btn" onclick="copyCode('codemgr')">Copy</button>
+        <div id = 'codemgr' class="code-contents">
+def is_ok(arg):
+    # 条件を満たすかどうか？問題ごとに定義
+    pass
+      
+def meguru_bisect(ng, ok):
+    &#039;&#039;&#039;
+    初期値のng,okを受け取り,is_okを満たす最小(最大)のokを返す
+    まずis_okを定義すべし
+    ng ok は  とり得る最小の値-1 とり得る最大の値+1
+    最大最小が逆の場合はよしなにひっくり返す
+    &#039;&#039;&#039;
+    while (abs(ok - ng) &gt; 1):
+        mid = (ok + ng) // 2
+        if is_ok(mid):
+            ok = mid
+        else:
+            ng = mid
+    return ok
+      </div></div></div>      
+
+<div id='att' class="function-container">
+<div class="function-header" onclick="expand('att')">
+  <button class="accordion-toggle">&#x25BC;</button> 
+      <div class="function-name">
+注意事項
+  </div></div><div class="function-description">
+dfsでは深さの制限を解除する
+    </div><div class="code-container">
+      <button class="copy-btn" onclick="copyCode('codeatt')">Copy</button>
+      <div id = 'codeatt' class="code-contents">
+import sys
+sys.setrecursionlimit(10 ** 8)
+    </div></div></div>
+
+<div id='freq' class="function-container">
+<div class="function-header" onclick="expand('freq')">
+  <button class="accordion-toggle">&#x25BC;</button> 
+      <div class="function-name">
+よく使う
+  </div></div><div class="function-description">
+順列列挙，文字列結合，第二引数ソート，カウンター，defaultdict，bit全列挙，enumerate
+    </div><div class="code-container">
+      <button class="copy-btn" onclick="copyCode('codefreq')">Copy</button>
+      <div id = 'codefreq' class="code-contents">
+# itertools
+# ABC_302_C
+import itertools
+P = [1,2,3]
+list(itertools.permutations(P))
+for p in P:
+    print(p)
+
+# 文字列の結合
+list = [1,2,3]
+list = [str(l) for l in list]
+s = ''.join(list)
+print(s)
+
+# sort
+list = [[1,2], [2,1]]
+list.sort(key=lambda x:x[1])
+print(list)
+
+# Counter
+import collections
+list = [1,1,0,0,2,2,2]
+c = collections.Counter(list)
+print(c) # Counter({2: 3, 1: 2, 0: 2})
+print(c.keys()) # dict_keys([1, 0, 2])
+print(c.values()) # dict_values([2, 2, 3])
+print(c.items()) # dict_items([(1, 2), (0, 2), (2, 3)])
+print(c.most_common()) # [(2, 3), (1, 2), (0, 2)]
+
+# defaultdict
+#ABC298C
+from collections import defaultdict
+card = defaultdict(set)
+card[i].add(j)
+M = defaultdict(int)
+M[i]+=1
+# ABC291C
+# 平面座標を文字列で管理
+seen = defaultdict(int)
+seen[str(x)+str(y)]=1
+
+# bit全列挙
+from itertools import product
+N = 5
+for pro in product((0, 1), repeat=N):
+    print(pro)
+
+# enumerate
+l = [4,5,6]
+# 1から始まる
+for i, name in enumerate(l, 1):
+    print(i, name)
+# 0から始まる
+for i, name in enumerate(l):
+    print(i, name)
+
+    </div></div></div>
+
+<div id='dml' class="function-container">
+<div class="function-header" onclick="expand('dml')">
+  <button class="accordion-toggle">&#x25BC;</button> 
+      <div class="function-name">
+Decimal
+  </div></div><div class="function-description">
+小数の精度を上げる，sqrt，分数変換，丸め
+<br><a href='https://python-remrin.hatenadiary.jp/entry/2017/05/25/131136'>参考</a>
+    </div><div class="code-container">
+      <button class="copy-btn" onclick="copyCode('codedml')">Copy</button>
+      <div id = 'codedml' class="code-contents">
+from decimal import Decimal, getcontext
+getcontext().prec = 1000
+a = 2
+a = Decimal(a)
+c = (a).sqrt()
+print(c)
+
+Decimal('-3.14').as_integer_ratio() #(-157, 50)
+    </div></div></div>
+
+<div id='mex' class="function-container">
+<div class="function-header" onclick="expand('mex')">
+<button class="accordion-toggle">&#x25BC;</button> 
+    <div class="function-name">
+Mex
+</div></div><div class="function-description">
+mexをいい計算量で求める関数
+  </div><div class="code-container">
+    <button class="copy-btn" onclick="copyCode('codemex')">Copy</button>
+    <div id = 'codemex' class="code-contents">
+from heapq import heappop,heappush,heapify
+class MinSet:
+    def __init__(self, arr=[]) -&gt; None:
+        self.q = arr
+        heapify(self.q)
+        self.d = []
+    def add(self,x):
+        heappush(self.q, x)
+    def remove(self,x):
+        heappush(self.d, x)
+    def get_min(self):
+        while self.q and self.d and self.q[0]==self.d[0]:
+            heappop(self.q)
+            heappop(self.d)
+        return self.q[0] if self.q else None
+    def pop_min(self):
+        while self.q and self.d and self.q[0]==self.d[0]:
+            heappop(self.q)
+            heappop(self.d)
+        return heappop(self.q)
+    def is_empty(self):
+        return self.get_min() is None
+class Mex:    
+    def __init__(self, arr=[]) -&gt; None:
+        self.MAX = 10**6+5
+        self.hist = [0] * (self.MAX+1)
+        for a in arr:
+            if a &gt; self.MAX: continue
+            self.hist[a] += 1
+        self.ms = MinSet()
+        for i in range(self.MAX+1):
+            if self.hist[i] == 0:
+                self.ms.add(i)
+    def get(self):
+        return self.ms.get_min()
+    def add(self, x):
+        if x &gt; self.MAX: return
+        self.hist[x] += 1
+        if self.hist[x] == 1:
+            self.ms.remove(x)
+    def remove(self, x):
+        if x &gt; self.MAX: return
+        self.hist[x] -= 1
+        if self.hist[x] == 0:
+            self.ms.add(x)
+
+# mex,メクス，メックス，
+import sys
+input = sys.stdin.readline
+N,Q = map(int,input().split())
+A = list(map(int,input().split()))
+qs = [tuple(map(int,input().split())) for _ in range(Q)]
+mex = Mex(A)
+for i,x in qs:
+    i -= 1
+    mex.remove(A[i])
+    mex.add(x)
+    A[i] = x
+    print(mex.get())
+  </div></div></div>
+
+<div id='mem' class="function-container">
+<div class="function-header" onclick="expand('mem')">
+  <button class="accordion-toggle">&#x25BC;</button> 
+      <div class="function-name">
+メモ化再帰
+  </div></div><div class="function-description">
+再帰関数でダブりが多いと高速になる．フィボナッチ数列とか
+defaultdictでもよさそうな気がする
+<a href='https://atcoder.jp/contests/abc340/submissions/50189079'target="_blank">ABC340C</a>
+<a href="https://qiita.com/alchemist/items/c75174c41b0bcd31ecc6" target="_blank">参考</a>
+    </div><div class="code-container">
+      <button class="copy-btn" onclick="copyCode('codemem')">Copy</button>
+      <div id = 'codemem' class="code-contents">
+from functools import lru_cache
+@lru_cache()
+def f(x):
+    </div></div></div>
+
+<div id='#' class="function-container">
+  <div class="function-header" onclick="expand('#')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+#title
+</div></div><div class="function-description">
+#description
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('code#')">Copy</button>
+  <div id = 'code#' class="code-contents">
+#code
+</div></div></div>    
+    
+<div id='#' class="function-container">
+  <div class="function-header" onclick="expand('#')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+#title
+</div></div><div class="function-description">
+#description
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('code#')">Copy</button>
+  <div id = 'code#' class="code-contents">
+#code
+</div></div></div>
+
+</body>
+</html>
+
