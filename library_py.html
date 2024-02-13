@@ -111,7 +111,8 @@
 <body>
 
 <p>エスケープ処理 : https://saruwakakun.com/tools/html-escape</p> 
-メモ：SCC,UnionFind,dfs,bfs,トポロジカルソート,最大フロー,素因数分解,素数判定,拡張ユークリッド,辞書(get),
+<p>他の人のライブラリ : https://tjkendev.github.io/procon-library/python/index.html</p>
+メモ：UnionFind,dfs,bfs,トポロジカルソート,最大フロー,辞書(get),
 mex,平方分割，重み付きUF,dp色々,ナップザック,bitdp,確率dp,rotate(ABC336F)一般化,zip,逆元,
 累積和,転倒数,()deque,半分全列挙,
 ABC327F-Apple関数化できそう,いもす法,典型90何問か,最長共通部分列,区間dp,pow,部分和問題,Nim一般化,グラフ色々,
@@ -199,6 +200,91 @@ def dijkstra(S,N,edge):
   </div>
 </div>
 
+
+<div id='6' class="function-container">
+  <div class="function-header" onclick="expand('6')">
+    <button class="accordion-toggle">&#x25BC;</button> 
+    <div class="function-name">
+セグ木（一点更新，区間最大）
+</div></div>
+  <div class="function-description">
+    log(N)で一点更新と区間最大，区間最小，区間和，区間積，最大公約数などを求める．
+<a href='https://qiita.com/takayg1/items/c811bd07c21923d7ec69' target="_blank">参考</a>  
+<a href='https://atcoder.jp/contests/abc339/submissions/49962160' target="_blank">ABC339E</a>
+排他的論理和もいける？
+
+  </div>
+  <div class="code-container">
+    <button class="copy-btn" onclick="copyCode('#')">Copy</button>
+    <div id = '#' class="code-contents">
+def segfunc(x, y):
+return max(x, y)
+
+INF=float(&#039;inf&#039;)
+ide_ele =-INF
+
+class SegTree:
+&quot;&quot;&quot;
+init(init_val, ide_ele): 配列init_valで初期化 O(N)
+update(k, x): k番目の値をxに更新 O(logN)
+query(l, r): 区間[l, r)をsegfuncしたものを返す O(logN)
+&quot;&quot;&quot;
+def __init__(self, init_val, segfunc, ide_ele):
+    &quot;&quot;&quot;
+    init_val: 配列の初期値
+    segfunc: 区間にしたい操作
+    ide_ele: 単位元
+    n: 要素数
+    num: n以上の最小の2のべき乗
+    tree: セグメント木(1-index)
+    &quot;&quot;&quot;
+    n = len(init_val)
+    self.segfunc = segfunc
+    self.ide_ele = ide_ele
+    self.num = 1 &lt;&lt; (n - 1).bit_length()
+    self.tree = [ide_ele] * 2 * self.num
+    for i in range(n):
+        self.tree[self.num + i] = init_val[i]
+    for i in range(self.num - 1, 0, -1):
+        self.tree[i] = self.segfunc(self.tree[2 * i], self.tree[2 * i + 1])
+
+def update(self, k, x):
+    &quot;&quot;&quot;
+    k番目の値をxに更新
+    k: index(0-index)
+    x: update value
+    &quot;&quot;&quot;
+    k += self.num
+    self.tree[k] = x
+    while k &gt; 1:
+        self.tree[k &gt;&gt; 1] = self.segfunc(self.tree[k], self.tree[k ^ 1])
+        k &gt;&gt;= 1
+
+def query(self, l, r):
+    &quot;&quot;&quot;
+    [l, r)のsegfuncしたものを得る
+    l: index(0-index)
+    r: index(0-index)
+    &quot;&quot;&quot;
+    res = self.ide_ele
+
+    l += self.num
+    r += self.num
+    while l &lt; r:
+        if l &amp; 1:
+            res = self.segfunc(res, self.tree[l])
+            l += 1
+        if r &amp; 1:
+            res = self.segfunc(res, self.tree[r - 1])
+        l &gt;&gt;= 1
+        r &gt;&gt;= 1
+    return res
+
+# seg = SegTree(N, segfunc, ide_ele)
+# seg.query(0,N)
+# seg.update(1,10)
+  </div></div></div>
+
 <div id='4' class="function-container">
   <div class="function-header" onclick="expand('4')">
     <button class="accordion-toggle">&#x25BC;</button> 
@@ -206,11 +292,13 @@ def dijkstra(S,N,edge):
 遅延セグ木（区間加算，区間和）
 </div></div>
   <div class="function-description">
-ABC340E,ABC339E
+ABC340E
+<a href="https://qiita.com/ether2420/items/7b67b2b35ad5f441d686" target="_blank">参考</a>
   </div>
   <div class="code-container">
     <button class="copy-btn" onclick="copyCode('code4')">Copy</button>
     <div id = 'code4' class="code-contents">
+
 # 遅延セグ木，Lazy，segtree
 def segfunc(x,y):
     return x+y
@@ -255,15 +343,15 @@ class LazySegTree_RAQ:
         ids = self.gindex(l,r)
         l += self.num
         r += self.num
-        while l&amp;lt;r:
-            if l&amp;amp;1:
+        while l&lt;r:
+            if l&amp;1:
                 self.lazy[l] += x
                 self.tree[l] += x
                 l += 1
-            if r&amp;amp;1:
+            if r&amp;1:
                 self.lazy[r-1] += x
                 self.tree[r-1] += x
-            r &amp;gt;&amp;gt;= 1
+            r &gt;&gt;= 1
             l &gt;&gt;= 1
         for i in ids:
             self.tree[i] = self.segfunc(self.tree[2*i], self.tree[2*i+1]) + self.lazy[i]
@@ -282,14 +370,15 @@ class LazySegTree_RAQ:
             r &gt;&gt;= 1
         return res
 
-def showSegTree():
-      return [seg.query(i,i+1) for i in range(N)]
+def SegTree(l,r):
+      return [seg.query(i,i+1) for i in range(l,r)]
 
+N = int(input())
 A = list(map(int,input().split()))
 seg = LazySegTree_RAQ(A, segfunc, 0)
 seg.query(0,N) #[0,N)の和
-seg.add(0,N,k) #[0,N)にkを加算
-print(*showSegTree())
+seg.add(0,N,1) #[0,N)にkを加算
+print(*SegTree(0,N))
   
   </div></div></div>
 
@@ -297,99 +386,99 @@ print(*showSegTree())
     <div class="function-header" onclick="expand('5')">
       <button class="accordion-toggle">&#x25BC;</button> 
     <div class="function-name">
-遅延セグ木（区間更新，区間和）
+遅延セグ木（区間更新，区間最小）
   </div></div>
     <div class="function-description">
-  #description
+<a href="https://qiita.com/ether2420/items/7b67b2b35ad5f441d686" target="_blank">参考</a>
     </div>
     <div class="code-container">
       <button class="copy-btn" onclick="copyCode('code#')">Copy</button>
       <div id = 'code#' class="code-contents">
-  #code
-    </div></div></div>
-
-    <div id='6' class="function-container">
-      <div class="function-header" onclick="expand('6')">
-        <button class="accordion-toggle">&#x25BC;</button> 
-        <div class="function-name">
-セグ木（一点更新，区間最大）
-    </div></div>
-      <div class="function-description">
-        log(N)で一点更新と区間最大，区間最小，区間和，区間積，最大公約数などを求める．
-<a href='https://qiita.com/takayg1/items/c811bd07c21923d7ec69' target="_blank">参考</a>        排他的論理和もいける？<br>
-ABC339E
-
-      </div>
-      <div class="code-container">
-        <button class="copy-btn" onclick="copyCode('#')">Copy</button>
-        <div id = '#' class="code-contents">
-def segfunc(x, y):
-    return max(x, y)
-
-INF=float(&#039;inf&#039;)
-ide_ele =-INF
-
-class SegTree:
-    &quot;&quot;&quot;
-    init(init_val, ide_ele): 配列init_valで初期化 O(N)
-    update(k, x): k番目の値をxに更新 O(logN)
-    query(l, r): 区間[l, r)をsegfuncしたものを返す O(logN)
-    &quot;&quot;&quot;
-    def __init__(self, init_val, segfunc, ide_ele):
-        &quot;&quot;&quot;
-        init_val: 配列の初期値
-        segfunc: 区間にしたい操作
-        ide_ele: 単位元
-        n: 要素数
-        num: n以上の最小の2のべき乗
-        tree: セグメント木(1-index)
-        &quot;&quot;&quot;
+def segfunc(x,y):
+    return min(x,y)
+ide_ele = float(&#039;inf&#039;)
+class LazySegTree_RUQ:
+    def __init__(self,init_val,segfunc,ide_ele):
         n = len(init_val)
         self.segfunc = segfunc
         self.ide_ele = ide_ele
-        self.num = 1 &lt;&lt; (n - 1).bit_length()
-        self.tree = [ide_ele] * 2 * self.num
+        self.num = 1&lt;&lt;(n-1).bit_length()
+        self.tree = [ide_ele]*2*self.num
+        self.lazy = [None]*2*self.num
         for i in range(n):
-            self.tree[self.num + i] = init_val[i]
-        for i in range(self.num - 1, 0, -1):
-            self.tree[i] = self.segfunc(self.tree[2 * i], self.tree[2 * i + 1])
-
-    def update(self, k, x):
-        &quot;&quot;&quot;
-        k番目の値をxに更新
-        k: index(0-index)
-        x: update value
-        &quot;&quot;&quot;
-        k += self.num
-        self.tree[k] = x
-        while k &gt; 1:
-            self.tree[k &gt;&gt; 1] = self.segfunc(self.tree[k], self.tree[k ^ 1])
-            k &gt;&gt;= 1
-
-    def query(self, l, r):
-        &quot;&quot;&quot;
-        [l, r)のsegfuncしたものを得る
-        l: index(0-index)
-        r: index(0-index)
-        &quot;&quot;&quot;
-        res = self.ide_ele
-
+            self.tree[self.num+i] = init_val[i]
+        for i in range(self.num-1,0,-1):
+            self.tree[i] = self.segfunc(self.tree[2*i],self.tree[2*i+1])
+    def gindex(self,l,r):
         l += self.num
         r += self.num
-        while l &lt; r:
-            if l &amp; 1:
-                res = self.segfunc(res, self.tree[l])
+        lm = l&gt;&gt;(l&amp;-l).bit_length()
+        rm = r&gt;&gt;(r&amp;-r).bit_length()
+        while r&gt;l:
+            if l&lt;=lm:
+                yield l
+            if r&lt;=rm:
+                yield r
+            r &gt;&gt;= 1
+            l &gt;&gt;= 1
+        while l:
+            yield l
+            l &gt;&gt;= 1
+    def propagates(self,*ids):
+        for i in reversed(ids):
+            v = self.lazy[i]
+            if v is None:
+                continue
+            self.lazy[i] = None
+            self.lazy[2*i] = v
+            self.lazy[2*i+1] = v
+            self.tree[2*i] = v
+            self.tree[2*i+1] = v
+    def update(self,l,r,x):
+        ids = self.gindex(l,r)
+        self.propagates(*self.gindex(l,r))
+        l += self.num
+        r += self.num
+        while l&lt;r:
+            if l&amp;1:
+                self.lazy[l] = x
+                self.tree[l] = x
                 l += 1
-            if r &amp; 1:
-                res = self.segfunc(res, self.tree[r - 1])
+            if r&amp;1:
+                self.lazy[r-1] = x
+                self.tree[r-1] = x
+            r &gt;&gt;= 1
+            l &gt;&gt;= 1
+        for i in ids:
+            self.tree[i] = self.segfunc(self.tree[2*i], self.tree[2*i+1])
+    def query(self,l,r):
+        ids = self.gindex(l,r)
+        self.propagates(*self.gindex(l,r))
+        res = self.ide_ele
+        l += self.num
+        r += self.num
+        while l&lt;r:
+            if l&amp;1:
+                res = self.segfunc(res,self.tree[l])
+                l += 1
+            if r&amp;1:
+                res = self.segfunc(res,self.tree[r-1])
             l &gt;&gt;= 1
             r &gt;&gt;= 1
         return res
 
-# seg = SegTree(N, segfunc, ide_ele)
-# seg.query(0,N)
-# seg.update(1,10)
-      </div></div></div>
+def SegTree(l,r):
+      return [seg.query(i,i+1) for i in range(l,r)]
+
+N = int(input())
+A = list(map(int,input().split()))
+seg = LazySegTree_RUQ(A,segfunc,ide_ele)
+print(seg.query(0,N))
+print(SegTree(0,N))
+seg.update(0,N,1)
+print(SegTree(0,N))
+    </div></div></div>
+
   
 <div id='bisect' class="function-container">
   <div class="function-header" onclick="expand('bisect')">
@@ -534,17 +623,22 @@ sys.setrecursionlimit(10 ** 8)
       <div class="function-name">
 よく使う
   </div></div><div class="function-description">
-順列列挙，文字列結合，第二引数ソート，カウンター，defaultdict，bit全列挙，enumerate
+順列列挙，組み合わせ列挙，文字列結合，第二引数ソート，カウンター，defaultdict，bit全列挙，enumerate,deque，累積和
+copy，n進数変換，辞書<br>
+<a href="https://qiita.com/Kentaro_okumura/items/5b95b767a2e691cd5482" target="_blank">参考</a> 
     </div><div class="code-container">
       <button class="copy-btn" onclick="copyCode('codefreq')">Copy</button>
       <div id = 'codefreq' class="code-contents">
-# itertools
+# 順列列挙，組合せ列挙
 # ABC_302_C
-import itertools
-P = [1,2,3]
-list(itertools.permutations(P))
-for p in P:
-    print(p)
+from itertools import product, permutations,combinations
+A=[1,2,3,4]
+for i in permutations(A,2):
+    print(i,end=' ')
+#(1, 2) (1, 3) (1, 4) (2, 1) (2, 3) (2, 4) (3, 1) (3, 2) (3, 4) (4, 1) (4, 2) (4, 3) 
+for i in combinations(A,2):
+    print(i, end=' ')
+#(1, 2) (1, 3) (1, 4) (2, 3) (2, 4) (3, 4) 
 
 # 文字列の結合
 list = [1,2,3]
@@ -594,6 +688,58 @@ for i, name in enumerate(l, 1):
 for i, name in enumerate(l):
     print(i, name)
 
+# deque
+# https://docs.python.org/ja/3/library/collections.html#collections.deque
+from collections import deque
+q = deque()
+
+#累積和
+from itertools import accumulate
+A=[1,4,3,4,6,5]
+print(list(accumulate(A))) #[1, 5, 8, 12, 18, 23]
+
+#deepcopy
+from copy import deepcopy
+A=[1,2,3]
+B=deepcopy(A)
+B[1]=100
+print(A)
+
+#10進数 ->2,8,16進数
+i = 255
+int(bin(i)[2:]) # 11111111
+int(oct(i)[2:]) # 377
+int(hex(i)[2:]) # ff
+int(format(i, 'b'))
+int(format(i, 'o'))
+int(format(i, 'x'))
+
+# 0埋め
+print(format(i, '08b'))
+print(format(i, '08o'))
+print(format(i, '08x'))
+# 11111111
+# 00000377
+# 000000ff
+
+# n進数(2,8,16) -> 10進数
+# n<=36までしか対応していないらしい
+# https://note.nkmk.me/python-bin-oct-hex-int-format/
+print(int('10'))
+print(int('10', 2))
+print(int('10', 8))
+print(int('10', 16))
+
+# 辞書
+D = {}
+D = dict()
+D = sorted(D.items()) # キーソート
+D = dict(D)
+
+# 存在しないキー参照でエラーになる対策
+D.get(k) -> None
+D.get(k,0) -> 0
+
     </div></div></div>
 
 <div id='dml' class="function-container">
@@ -603,7 +749,7 @@ for i, name in enumerate(l):
 Decimal
   </div></div><div class="function-description">
 小数の精度を上げる，sqrt，分数変換，丸め
-<br><a href='https://python-remrin.hatenadiary.jp/entry/2017/05/25/131136'>参考</a>
+<br><a href='https://python-remrin.hatenadiary.jp/entry/2017/05/25/131136' target="_blank">参考</a>
     </div><div class="code-container">
       <button class="copy-btn" onclick="copyCode('codedml')">Copy</button>
       <div id = 'codedml' class="code-contents">
@@ -615,6 +761,8 @@ c = (a).sqrt()
 print(c)
 
 Decimal('-3.14').as_integer_ratio() #(-157, 50)
+
+
     </div></div></div>
 
 <div id='mex' class="function-container">
@@ -706,6 +854,241 @@ from functools import lru_cache
 def f(x):
     </div></div></div>
 
+<div id='pfact' class="function-container">
+  <div class="function-header" onclick="expand('pfact')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+素因数分解
+</div></div><div class="function-description">
+試し割法
+素因数分解したリストを取得 O(sqrt(N))
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codepfact')">Copy</button>
+  <div id = 'codepfact' class="code-contents">
+def prime_factorize(n):
+    a = []
+    while n % 2 == 0:
+        a.append(2)
+        n //= 2
+    f = 3
+    while f * f <= n:
+        if n % f == 0:
+            a.append(f)
+            n //= f
+        else:
+            f += 2
+    if n != 1:
+        a.append(n)
+    return a
+</div></div></div>    
+
+<div id='dvs' class="function-container">
+  <div class="function-header" onclick="expand('dvs')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+約数列挙
+</div></div><div class="function-description">
+nの約数を全て求める
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codedvs')">Copy</button>
+  <div id = 'codedvs' class="code-contents">
+def divisor(n): 
+    i = 1
+    table = []
+    while i * i <= n:
+        if n%i == 0:
+            table.append(i)
+            table.append(n//i)
+        i += 1
+    table = list(set(table))
+    return table
+</div></div></div>
+
+<div id='isp' class="function-container">
+  <div class="function-header" onclick="expand('isp')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+素数判定
+</div></div><div class="function-description">
+引数nが素数かどうかを判定
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codeisp')">Copy</button>
+  <div id = 'codeisp' class="code-contents">
+def is_prime(n):
+for i in range(2, n + 1):
+    if i * i > n:
+        break
+    if n % i == 0:
+        return False
+return n != 1
+</div></div></div>
+
+<div id='nton' class="function-container">
+  <div class="function-header" onclick="expand('nton')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+進数変換
+</div></div><div class="function-description">
+  <a href="https://qiita.com/ether2420/items/061c19a000c52adf7f3e" target="_blank">参考</a>
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codenton')">Copy</button>
+  <div id = 'codenton' class="code-contents">
+# n進数->10進数
+def base_10(num_n,n):
+    num_10 = 0
+    for s in str(num_n):
+        num_10 *= n
+        num_10 += int(s)
+    return num_10
+
+# 10進数->n進数
+def base_n(num_10,n):
+    str_n = ''
+    while num_10:
+        if num_10%n>=10:
+            return -1
+        str_n += str(num_10%n)
+        num_10 //= n
+    return int(str_n[::-1])
+</div></div></div>
+
+<div id='scc' class="function-container">
+  <div class="function-header" onclick="expand('scc')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+SCC
+</div></div><div class="function-description">
+  有向グラフ G=(V,E)
+  における強連結の関係にある複数の頂点をひとまとまりにして分解する。
+  <a href="https://tjkendev.github.io/procon-library/python/graph/scc.html" target="_blank">参考</a>
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codescc')">Copy</button>
+  <div id = 'codescc' class="code-contents">
+
+# 強連結成分分解(SCC): グラフGに対するSCCを行う
+# 入力: &lt;N&gt;: 頂点サイズ, &lt;G&gt;: 順方向の有向グラフ, &lt;RG&gt;: 逆方向の有向グラフ
+# 出力: (&lt;ラベル数&gt;, &lt;各頂点のラベル番号&gt;)
+def scc(N, G, RG):
+    order = []
+    used = [0]*N
+    group = [None]*N
+    def dfs(s):
+        used[s] = 1
+        for t in G[s]:
+            if not used[t]:
+                dfs(t)
+        order.append(s)
+    def rdfs(s, col):
+        group[s] = col
+        used[s] = 1
+        for t in RG[s]:
+            if not used[t]:
+                rdfs(t, col)
+    for i in range(N):
+        if not used[i]:
+            dfs(i)
+    used = [0]*N
+    label = 0
+    for s in reversed(order):
+        if not used[s]:
+            rdfs(s, label)
+            label += 1
+    return label, group
+
+# 縮約後のグラフを構築
+# output: 
+# g0:各ラベルから伸びるラベル（辺）
+# gp:各ラベルに属する元の頂点番号
+def construct(N, G, label, group):
+    G0 = [set() for i in range(label)]
+    GP = [[] for i in range(label)]
+    for v in range(N):
+        lbs = group[v]
+        for w in G[v]:
+            lbt = group[w]
+            if lbs == lbt:
+                continue
+            G0[lbs].add(lbt)
+        GP[lbs].append(v)
+    return G0, GP
+</div></div></div>
+
+<div id='mojihairetu' class="function-container">
+  <div class="function-header" onclick="expand('mojihairetu')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+文字列前処理
+</div></div><div class="function-description">
+  C[i][j] アルファベットjが左からi番目以降に最初に現れるインデックス
+  <a href="https://atcoder.jp/contests/typical90/submissions/46444852" target="_blank">参考</a>
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codemojihairetu')">Copy</button>
+  <div id = 'codemojihairetu' class="code-contents">
+def arr(S):
+    l = len(S)
+    C = [[-1 for j in range(26)] for i in range(l)]
+
+    ind = ord(S[-1]) - ord('a')
+    C[-1][ind] = l-1
+
+    for i in range(l-2,-1,-1):
+        ind = ord(S[i]) - ord('a')
+        for j in range(26):
+            C[i][j] = C[i+1][j]
+        C[i][ind] = i
+    return C
+</div></div></div>
+
+<div id='extgcd' class="function-container">
+  <div class="function-header" onclick="expand('extgcd')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+拡張ユークリッド
+</div></div><div class="function-description">
+a,bを入力としてax+by=dとなるx,y,dを計算する
+dはx,yの最大公約数
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codeextgcd')">Copy</button>
+  <div id = 'codeextgcd' class="code-contents">
+def extgcd(a, b):
+    if b:
+        d, y, x = extgcd(b, a % b)
+        y -= (a // b)*x
+        return d, x, y
+    return a, 1, 0
+</div></div></div>
+
+<div id='nap1' class="function-container">
+  <div class="function-header" onclick="expand('nap1')">
+<button class="accordion-toggle">&#x25BC;</button> 
+  <div class="function-name">
+ナップサック問題
+</div></div><div class="function-description">
+0-1ナップサック問題，
+個数制限なしナップサック問題，
+個数制限付きナップサック問題，
+O(NW)
+<a href="https://tjkendev.github.io/procon-library/python/dp/knapsack1.html" target="_blank">link</a><br>
+Wが大きい，vが小さいとき
+0-1ナップサック問題O(N^2max(v))，
+個数制限付きナップサック問題O(N^2max(v)max(c))，
+個数制限付きナップサック問題O(N^2max(v)max(c)),O(N^2max(v^2))，
+<a href="https://tjkendev.github.io/procon-library/python/dp/knapsack2.html" target="_blank">link</a><br>
+N<=40のときは半分全列挙
+0-1ナップサック問題O(2^(N/2))
+<a href="https://tjkendev.github.io/procon-library/python/dp/knapsack-meet-in-the-middle.html" target="_blank">link</a><br>
+
+</div><div class="code-container">
+  <button class="copy-btn" onclick="copyCode('codenap1')">Copy</button>
+  <div id = 'codenap1' class="code-contents">
+#code
+</div></div></div>
+<h1>幾何学</h1>
+
+<a href="https://tjkendev.github.io/procon-library/python/index.html" target="_blank">link</a>
+
+
+<h1>Format</h1>
 <div id='#' class="function-container">
   <div class="function-header" onclick="expand('#')">
 <button class="accordion-toggle">&#x25BC;</button> 
@@ -717,8 +1100,8 @@ def f(x):
   <button class="copy-btn" onclick="copyCode('code#')">Copy</button>
   <div id = 'code#' class="code-contents">
 #code
-</div></div></div>    
-    
+</div></div></div>
+
 <div id='#' class="function-container">
   <div class="function-header" onclick="expand('#')">
 <button class="accordion-toggle">&#x25BC;</button> 
